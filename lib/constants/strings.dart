@@ -5,3 +5,4 @@ const characterScreen = '/';
 const characterDetailsScreen = '/character_details';
 //############## END POINTS ###################
 const charactersEndPoint = 'characters';
+const quote = 'quote';
