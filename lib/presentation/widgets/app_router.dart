@@ -14,12 +14,14 @@ class AppRouter {
     charactersRepository = CharactersRepository(CharactersWebServices());
     charactersCubit = CharactersCubit(charactersRepository);
   }
+  // ignore: body_might_complete_normally_nullable
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case characterScreen:
-        return MaterialPageRoute(builder: (_) =>  BlocProvider(
-          create: (context) => charactersCubit,
-          child: const CharactersScreen()));
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                create: (context) => charactersCubit,
+                child: const CharactersScreen()));
       case characterDetailsScreen:
         return MaterialPageRoute(
             builder: (_) => const CharactersDetailsScreen());
