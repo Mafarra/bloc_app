@@ -8,7 +8,8 @@ class CharacterItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return 
+     Container(
       width: double.infinity,
       margin: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
       padding: const EdgeInsetsDirectional.all(4),
@@ -42,11 +43,11 @@ class CharacterItem extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   placeholder: 'assets/images/dots_loading.gif',
-                  image: character.img??"",
+                  image: character.img ?? "",
                   fit: BoxFit.cover,
+                  placeholderFit: BoxFit.fill,
                 )
-              :
-              Image.asset('assets/images/abeer1.jpeg'),
+              : Image.asset(''),
         ),
       ),
     );

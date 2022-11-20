@@ -11,6 +11,6 @@ class CharactersRepository {
     final characters = await charactersWebServices.getAllCharacters();
     return characters
         .map((character) => Character.fromJson(character))
-        .toList(); 
+        .toList();
   }
 }

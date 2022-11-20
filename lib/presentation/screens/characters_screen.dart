@@ -17,12 +17,13 @@ class CharactersScreen extends StatefulWidget {
 
 class _CharactersScreenState extends State<CharactersScreen> {
   List<Character> allCharacters = [];
-
+  bool _isSerching = false;
+  List<Character> serchedForCharacter = [];
+  final __searcedTextController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    allCharacters =
-        BlocProvider.of<CharactersCubit>(context).getAllCharacters();
+    BlocProvider.of<CharactersCubit>(context).getAllCharacters();
   }
 
   Widget buildBlocWidget() {
@@ -46,37 +47,140 @@ class _CharactersScreenState extends State<CharactersScreen> {
   }
 
   Widget buildLoadedListWidget() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Container(
-        width: double.infinity,
-        color: MyColors.myGrey,
-        child: Column(
-          children: [
-            buildCharactersList(),
-          ],
-        ),
-      ),
-    );
+    return serchedForCharacter.isEmpty &&
+        _isSerching
+        ? Container(
+            child: buildCharactersList(),
+          )
+        : SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Container(
+              width: double.infinity,
+              color: MyColors.myGrey,
+              child: Column(
+                children: [
+                  buildCharactersList(),
+                ],
+              ),
+            ),
+          );
   }
 
   Widget buildCharactersList() {
-    return GridView.builder(
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2 / 3,
-          crossAxisSpacing: 1,
-          mainAxisSpacing: 1,
-        ),
-        itemCount: allCharacters.length,
-        itemBuilder: (context, index) {
-          return CharacterItem(
-            character: allCharacters[index],
-          );
-        });
+    if (allCharacters.isEmpty) {
+      return SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Image.asset('assets/images/search_gif.gif'),
+      );
+    } else if (serchedForCharacter.isEmpty &&
+        _isSerching) {
+      return SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Image.asset('assets/images/search_gif.gif'),
+      );
+    } else {
+      return GridView.builder(
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
+          padding: EdgeInsets.zero,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 2 / 3,
+            crossAxisSpacing: 1,
+            mainAxisSpacing: 1,
+          ),
+          itemCount: __searcedTextController.text.isEmpty
+              ? allCharacters.length
+              : serchedForCharacter.length,
+          itemBuilder: (context, index) {
+            return CharacterItem(
+              character: __searcedTextController.text.isEmpty
+                  ? allCharacters[index]
+                  : serchedForCharacter[index],
+            );
+          });
+    }
+  }
+
+  Widget _buildSearcheField() {
+    return TextField(
+      controller: __searcedTextController,
+      cursorColor: MyColors.myGrey,
+      decoration: const InputDecoration(
+        hintText: 'Find a character...',
+        border: InputBorder.none,
+        hintStyle: TextStyle(color: MyColors.myGrey, fontSize: 18),
+      ),
+      style: const TextStyle(color: MyColors.myGrey, fontSize: 18),
+      onChanged: (searchedCharacter) {
+        addSearchedForItemToSearchedList(searchedCharacter);
+      },
+    );
+  }
+
+  void addSearchedForItemToSearchedList(String searchedCharacter) {
+    setState(() {
+      serchedForCharacter = allCharacters
+          .where((character) =>
+              character.name!.toLowerCase().startsWith(searchedCharacter))
+          //.contains or .startwith as you like
+          .toList();
+    });
+  }
+
+  List<Widget> _buildAppBarActions() {
+    if (_isSerching) {
+      return [
+        IconButton(
+            onPressed: () {
+              _clearSearch();
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.close,
+              color: MyColors.myGrey,
+            )),
+      ];
+    } else {
+      return [
+        IconButton(
+            onPressed: _startSearching,
+            icon: const Icon(
+              Icons.search,
+              color: MyColors.myGrey,
+            ))
+      ];
+    }
+  }
+
+  void _startSearching() {
+    ModalRoute.of(context)!
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+    setState(() {
+      _isSerching = true;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearch();
+    setState(() {
+      _isSerching = false;
+    });
+  }
+
+  void _clearSearch() {
+    setState(() {
+      __searcedTextController.clear();
+    });
+  }
+
+  Widget _buildAppBarTitle() {
+    return const Text(
+      "Cahracters",
+      style: TextStyle(color: MyColors.myGrey),
+    );
   }
 
   @override
@@ -84,10 +188,13 @@ class _CharactersScreenState extends State<CharactersScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColors.myYellow,
-        title: const Text(
-          'characters',
-          style: TextStyle(color: MyColors.myWhite),
-        ),
+        title: _isSerching ? _buildSearcheField() : _buildAppBarTitle(),
+        actions: _buildAppBarActions(),
+        leading: _isSerching
+            ? const BackButton(
+                color: MyColors.myGrey,
+              )
+            : Container(),
       ),
       body: buildBlocWidget(),
     );
