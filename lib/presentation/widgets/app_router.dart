@@ -15,8 +15,9 @@ class AppRouter {
   AppRouter() {
     charactersRepository = CharactersRepository(CharactersWebServices());
     charactersCubit = CharactersCubit(charactersRepository);
+    //next line  => bad readability
+    //charactersCubit = CharactersCubit(CharactersRepository(CharactersWebServices()));
   }
-  // ignore: body_might_complete_normally_nullable
   Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case characterScreen:

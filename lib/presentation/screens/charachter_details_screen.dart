@@ -4,12 +4,8 @@ import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bloc_app/business_logic/cubit/characters_cubit.dart';
 import 'package:bloc_app/constants/my_colors.dart';
-import 'package:bloc_app/constants/strings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../data/models/character_model.dart';
 
 class CharactersDetailsScreen extends StatelessWidget {
@@ -106,7 +102,7 @@ class CharactersDetailsScreen extends StatelessWidget {
       const SizedBox(
         height: 20,
       ),
-      BlocBuilder<CharactersCubit,CharactersState>(builder: (context, state) {
+      BlocBuilder<CharactersCubit, CharactersState>(builder: (context, state) {
         return checkIfQuotesAreLoaded(state);
       }),
     ];
@@ -119,6 +115,7 @@ class CharactersDetailsScreen extends StatelessWidget {
       return showLoadingIndecator();
     }
   }
+
   Widget showLoadingIndecator() {
     return const Center(
       child: CircularProgressIndicator(
@@ -126,6 +123,7 @@ class CharactersDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget displayRandomQuoteOrEmptySpace(QuotesLoaded state) {
     var quotes = (state).quotes;
     if (quotes.isNotEmpty) {
@@ -138,13 +136,14 @@ class CharactersDetailsScreen extends StatelessWidget {
               color: MyColors.myWhite,
               shadows: [
                 Shadow(
-                    blurRadius: 7,
-                    color: MyColors.myWhite,
+                    blurRadius: 20,
+                    color: MyColors.myYellow,
                     offset: Offset(0, 0)),
               ],
             ),
             child: AnimatedTextKit(
               repeatForever: true,
+              // pause: const Duration(milliseconds: 1000),
               animatedTexts: [
                 FlickerAnimatedText(quotes[randomQuoteIndex].quote!),
               ],
