@@ -1,4 +1,4 @@
-import 'package:bloc_app/constants/my_colors.dart';
+import '../../constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import '../../constants/strings.dart';
 import '../../data/models/character_model.dart';
@@ -47,7 +47,7 @@ class CharacterItem extends StatelessWidget {
                   ? FadeInImage.assetNetwork(
                       width: double.infinity,
                       height: double.infinity,
-                      placeholder: 'assets/images/dots_loading.gif',
+                      placeholder: loadingAsset,
                       image: character.img ?? "",
                       fit: BoxFit.cover,
                       placeholderFit: BoxFit.fill,

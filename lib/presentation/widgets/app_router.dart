@@ -1,9 +1,9 @@
-import 'package:bloc_app/business_logic/cubit/characters_cubit.dart';
-import 'package:bloc_app/constants/strings.dart';
-import 'package:bloc_app/data/repository/characters_repository.dart';
-import 'package:bloc_app/data/web_services/characters_web_services.dart';
-import 'package:bloc_app/presentation/screens/charachter_details_screen.dart';
-import 'package:bloc_app/presentation/screens/characters_screen.dart';
+import '../../business_logic/cubit/characters_cubit.dart';
+import '../../constants/strings.dart';
+import '../../data/repository/characters_repository.dart';
+import '../../data/web_services/characters_web_services.dart';
+import '../screens/charachter_details_screen.dart';
+import '../screens/characters_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,6 +29,7 @@ class AppRouter {
         final character = settings.arguments as Character;
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
+              //new cubit 
               create: (context) => CharactersCubit(charactersRepository),
               child: CharactersDetailsScreen(character: character,),
             ));

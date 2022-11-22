@@ -1,4 +1,4 @@
-import 'package:bloc_app/presentation/widgets/app_router.dart';
+import 'presentation/widgets/app_router.dart';
 import 'package:flutter/material.dart';
 
 void main() {

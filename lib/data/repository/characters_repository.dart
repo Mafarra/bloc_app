@@ -1,5 +1,5 @@
-import 'package:bloc_app/data/models/quote_model.dart';
-import 'package:bloc_app/data/web_services/characters_web_services.dart';
+import '../models/quote_model.dart';
+import '../web_services/characters_web_services.dart';
 
 import '../models/character_model.dart';
 

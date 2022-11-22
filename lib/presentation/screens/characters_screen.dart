@@ -1,11 +1,11 @@
-import 'package:bloc_app/business_logic/cubit/characters_cubit.dart';
-import 'package:bloc_app/constants/my_colors.dart';
-import 'package:bloc_app/data/models/character_model.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import '../../business_logic/cubit/characters_cubit.dart';
+import '../../constants/my_colors.dart';
+import '../../data/models/character_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_offline/flutter_offline.dart';
+import '../../constants/strings.dart';
 import '../widgets/character_item.dart';
 
 class CharactersScreen extends StatefulWidget {
@@ -47,8 +47,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
   }
 
   Widget buildLoadedListWidget() {
-    return serchedForCharacter.isEmpty &&
-        _isSerching
+    return serchedForCharacter.isEmpty && _isSerching
         ? Container(
             child: buildCharactersList(),
           )
@@ -71,14 +70,13 @@ class _CharactersScreenState extends State<CharactersScreen> {
       return SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Image.asset('assets/images/search_gif.gif'),
+        child: Image.asset(searchAsset),
       );
-    } else if (serchedForCharacter.isEmpty &&
-        _isSerching) {
+    } else if (serchedForCharacter.isEmpty && _isSerching) {
       return SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Image.asset('assets/images/search_gif.gif'),
+        child: Image.asset(searchAsset),
       );
     } else {
       return GridView.builder(
@@ -183,6 +181,49 @@ class _CharactersScreenState extends State<CharactersScreen> {
     );
   }
 
+  Widget _buildNoInternetConnection() {
+    return Center(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              color:Colors.black,
+              shadows: [
+                Shadow(
+                    blurRadius: 20,
+                    color: MyColors.myGrey,
+                    offset: Offset(0, 0)),
+              ],
+            ),
+            child: AnimatedTextKit(
+              repeatForever: true,
+              // pause: const Duration(milliseconds: 1000),
+              animatedTexts: [
+                FlickerAnimatedText('can\'t connect .. check internet',),
+              ],
+            )),
+              // const Text(
+            //   'can\'t connect .. check internet',
+            //   style: TextStyle(
+            //     fontSize: 22,
+            //     color: MyColors.myGrey,
+            //   ),
+            // ),
+            const SizedBox(
+              height: 10,
+            ),
+            Image.asset(noConnectionAsset)
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,7 +237,21 @@ class _CharactersScreenState extends State<CharactersScreen> {
               )
             : Container(),
       ),
-      body: buildBlocWidget(),
+      body: OfflineBuilder(
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
+          final bool connected = connectivity != ConnectivityResult.none;
+          if (connected) {
+            return buildBlocWidget();
+          } else {
+            return _buildNoInternetConnection();
+          }
+        },
+        child: showLoadingIndecator(),
+      ),
     );
   }
 }

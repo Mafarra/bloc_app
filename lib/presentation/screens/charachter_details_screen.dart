@@ -6,6 +6,7 @@ import 'package:bloc_app/business_logic/cubit/characters_cubit.dart';
 import 'package:bloc_app/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../data/models/character_model.dart';
 
 class CharactersDetailsScreen extends StatelessWidget {
